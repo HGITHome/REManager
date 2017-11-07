@@ -1,0 +1,2 @@
+点击下面链接激活账号，24小时生效，否则重新注册账号，链接只能使用一次，请尽快激活！</br>
+<a href="http://localhost:8080/REManager/register?action=activate&email={email}&validateCode={validateCode}">http://localhost:8080/REManager/register?action=activate&email={email}&validateCode={validateCode}</a>

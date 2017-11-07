@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"  
+    xmlns:beans="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd  
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">  
+       
+       <http pattern="/register" security="none" />
+       <http pattern="/logout" security="none" />
+       <http pattern="/o_find.do" security="none" />
+       <http pattern="/o_send.do" security="none" />
+       <http pattern="/find" security="none" />
+       <http pattern="/res/**" security="none" />
+       <http pattern="/resources/**" security="none" />
+       <http pattern="/static/**" security="none" />
+       <http pattern="/upload/**" security="none" />
+       <http pattern="/classic/**" security="none" />
+       <http pattern="/o_updateForm.do" security="none" />
+       <http pattern="/authority/*" security="none"/>
+       <http pattern="/information/*" security="none"/>
+       <http pattern="/export/*" security="none"/>
+       <http pattern="/realEstate/*" security="none"/>
+       <http pattern="/email/*" security="none" />
+       <http pattern="/log/*" security="none" />
+       <http pattern="/room/*" security="none" />
+       <http pattern="/order/*" security="none" />
+       <http pattern="/employee/*" security="none" />
+       <http pattern="/border/*" security="none" />
+       <http pattern="/owner/*" security="none" />
+       <http pattern="/emailLog/*" security="none" />
+       <http pattern="/signUp" security="none"/>
+    <http auto-config="true" >  
+        <!-- <intercept-url pattern="/signUp" access="permitAll" />
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/border/*" access="permitAll" />  
+        <intercept-url pattern="/order/*" access="hasRole('ROLE_DBA')" />
+        <intercept-url pattern="/authority/*" access="hasRole('ROLE_ADMIN')" />  
+        <intercept-url pattern="/room/*" access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_DBA')" />   -->
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/logout" access="permitAll"/>
+        <intercept-url pattern="/**" access="hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA') or hasRole('ROLE_ROLE') or hasRole('ROLE_SUPER')" />  
+        
+        <form-login  login-page="/login"  
+                     username-parameter="username"  
+                     password-parameter="password"
+                     authentication-failure-url="/Access_Denied" 
+                     authentication-success-handler-ref="loginSuccessHandler"
+                     authentication-failure-handler-ref="loginFailureHandler"
+                     />  
+       <remember-me  
+        remember-me-parameter="remember-me"  
+        remember-me-cookie="remember-me"  
+        token-validity-seconds="86400"  
+          data-source-ref="dataSource" /> 
+          <logout logout-success-url="/login?success" delete-cookies="JSESSIONID" logout-url="/logout"/>
+        <csrf/>  
+        <session-management>
+          <concurrency-control error-if-maximum-exceeded="false"/>
+        </session-management>
+        <headers>
+         <frame-options policy="SAMEORIGIN" />
+        </headers>
+    </http>  
+    
+    <authentication-manager >  
+        <authentication-provider user-service-ref="customUserDetailsService">
+        <password-encoder ref="bcryptEncoder" />
+        </authentication-provider>  
+        
+    </authentication-manager> 
+    <beans:bean id="loginSuccessHandler" class="com.dgut.modules.common.log.LoginSuccessHandler" />
+    
+    <beans:bean id="loginLogAuthenticationSuccessHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">  
+    <beans:property name="defaultTargetUrl" value="/index.jsp"></beans:property>  
+    </beans:bean> 
+    
+    <beans:bean id="loginFailureHandler" class="com.dgut.modules.common.log.LoginFailureHandler">
+       <beans:property name="defaultFailureUrl" value="/login"/>
+   </beans:bean>
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <beans:bean id="customUserDetailsService" class="com.dgut.modules.sys.login.service.impl.CustomUserDetailsService" />
+    
+</beans:beans>  
